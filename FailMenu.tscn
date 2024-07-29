@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://FailMenu.gd" type="Script" id=1]
+[ext_resource path="res://World.tres" type="Theme" id=2]
 
 [sub_resource type="Animation" id=7]
 resource_name = "InOut"
@@ -62,6 +63,7 @@ shader_param/custom_resolution = Vector2( 160, 180 )
 [node name="Control" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 2 )
 script = ExtResource( 1 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -80,21 +82,21 @@ margin_right = -0.23999
 custom_constants/separation = 64
 
 [node name="Label" type="Label" parent="VBoxContainer"]
-margin_right = 212.0
-margin_bottom = 14.0
+margin_right = 250.0
+margin_bottom = 18.0
 size_flags_horizontal = 3
 text = "The food is overcooked so you ?"
 align = 1
 
 [node name="Retry" type="Button" parent="VBoxContainer"]
-margin_top = 78.0
-margin_right = 212.0
-margin_bottom = 98.0
+margin_top = 82.0
+margin_right = 250.0
+margin_bottom = 100.0
 text = "Try again"
 
 [node name="Quit" type="Button" parent="VBoxContainer"]
-margin_top = 162.0
-margin_right = 212.0
+margin_top = 164.0
+margin_right = 250.0
 margin_bottom = 182.0
 text = "Quit"
 
