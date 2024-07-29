@@ -7,6 +7,6 @@ func activate():
 	yield($SkillBlock,"complete")
 	$AnimationPlayer.play("Hide")
 	Global.camera.zoom_out()
-	Global.players_ingredients_set("res://Onions.png")
+	Global.players_ingredients_set("res://Chease.png")
 	reactivate_player()
 

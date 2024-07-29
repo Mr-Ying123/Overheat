@@ -15,7 +15,7 @@ signal dove
 # warning-ignore:unused_signal
 signal death
 
-var speed := 550
+var speed := 450
 
 var acceleration : float = 1.0
 
@@ -93,11 +93,13 @@ func on_process(delta):
 	if Vector2(velocity.x,0).length() > 30:
 		flipPos = global_position - velocity
 	if flipPos.x >= global_position.x:
+		$CollisionShape2D.scale.x = 1
 		$SpriteParent.scale.x = lerp($SpriteParent.scale.x,1,0.5)
 	else:
+		$CollisionShape2D.scale.x = -1
 		$SpriteParent.scale.x = lerp($SpriteParent.scale.x,-1,0.5)
 	
-	$CollisionShape2D.scale = $SpriteParent.scale.normalized()
+	
 	
 	if !$JumpGraceTimer.is_stopped():
 		if_can_jump()
@@ -106,6 +108,7 @@ func on_process(delta):
 		last_on_foor_wall += delta
 	else:
 		last_on_foor_wall = 0.0
+		jumpcount = 0
 	if !(is_on_wall()):
 		last_on_wall += delta
 	else:
@@ -119,6 +122,7 @@ func get_gravity() -> float:
 	return jump_gravity if velocity.y < 0.0 else fall_gravity
 
 func jump(jump_scale := 1.0):
+	jumpcount += 1
 	ChageState(states.jumping)
 	YAxis = jump_velocity * jump_scale
 
@@ -132,6 +136,7 @@ func ChageState(set):
 		pause_mode = Node.PAUSE_MODE_STOP
 	state = set 
 
+var jumpcount
 var  last_on_wall := 0.0
 var  last_on_foor_wall := 0.0
 func _unhandled_input(_event):
@@ -139,7 +144,7 @@ func _unhandled_input(_event):
 	if Input.is_action_just_pressed("jump") and state != states.cooking:
 		if state != states.jumping and !(YAxis > 0 and !is_on_floor()) and state != states.dive: 
 			if_can_jump()
-		elif state != states.dive:
+		elif jumpcount <= 1:
 			ChageState(states.dive)
 	if Input.is_action_just_pressed("ui_down") and state != states.cooking:
 		$TaskArea2D.set_deferred("scale",Vector2(1,1))
@@ -182,9 +187,14 @@ func accelerate(force := false):
 		acceleration = lerp(acceleration,0,0.03)
 
 func if_can_jump(can := false):
-	if (last_on_foor_wall < 0.5) or can:
-		if last_on_wall < 0.5:
+	if (last_on_foor_wall < 0.2) or can:
+		if last_on_wall < 0.2:
 			jump(1.25)
+			acceleration = 1.25
+			var moveX = (Vector2(velocity.x,0).normalized().x)
+			if moveX == 1 or moveX == -1:
+				if get_node(str(moveX)).is_colliding():
+					move_velocity = Vector2(1500*-moveX,move_velocity.y)
 		else:
 			jump()
 		JumpGraceTimer.stop()
@@ -209,8 +219,10 @@ func on_players_ingredients_set():
 		kids.queue_free()
 	for pngs in Global.players_ingredients:
 		var sprite = TextureRect.new()
-		#sprite.expand = true
+		sprite.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		sprite.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		sprite.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+		sprite.expand = true
 		sprite.texture = load(pngs)
 		$Control/GridContainer.call_deferred("add_child",sprite)
 
@@ -219,7 +231,9 @@ func on_order_set():
 		kids.queue_free()
 	for pngs in Global.order:
 		var sprite = TextureRect.new()
-		#sprite.expand = true
-		sprite.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		sprite.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		sprite.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		sprite.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+		sprite.expand = true
 		sprite.texture = load(pngs)
 		$CanvasLayer/Control/GridContainer.call_deferred("add_child",sprite)

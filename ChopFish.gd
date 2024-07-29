@@ -7,6 +7,6 @@ func activate():
 	yield(Fish,"Complete")
 	$AnimationPlayer.play("Hide")
 	Global.camera.zoom_out()
-	Global.players_ingredients_set("res://fillet.png")
+	Global.players_ingredients_set("res://CookedFish.png")
 	reactivate_player()
 

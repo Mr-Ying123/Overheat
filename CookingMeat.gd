@@ -14,6 +14,6 @@ func activate():
 	$AnimationPlayer.play("Hide")
 	
 	Global.camera.zoom_out()
-	Global.players_ingredients_set("res://CookedMeat.png")
+	Global.players_ingredients_set("res://Egg.png")
 	reactivate_player()
 

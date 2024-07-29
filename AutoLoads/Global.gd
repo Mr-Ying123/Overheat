@@ -7,8 +7,13 @@ var order = [] setget order_set
 var players_ingredients = [] setget players_ingredients_set
 
 var Orders_left = 6
+var temp = 0
 
-var ingredients = ["res://fillet.png","res://Onions.png","res://bread.png","res://CookedMeat.png"]
+var speedrun_time = 0.0
+var best_speedrun_time = 0.0
+var time_passed = ""
+
+var ingredients = ["res://Chease.png","res://Bread.png","res://CookedFish.png","res://Egg.png"]
 func generate_order(amount : int):
 	randomize()
 	var tempvar = ingredients.duplicate()
@@ -55,3 +60,16 @@ func deliver():
 	else:
 		players_ingredients_set(tempvar)
 		order_set(tempvar2)
+
+func reset_game_state():
+
+	order = []
+	players_ingredients = []
+
+	Orders_left = 6
+	temp = 0
+
+	speedrun_time = 0.0
+	best_speedrun_time = 0.0
+
+	generate_order(1)
